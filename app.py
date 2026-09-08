@@ -1,5 +1,4 @@
 
-import os
 import sqlite3
 from datetime import datetime
 import uuid
@@ -7,10 +6,15 @@ import streamlit as st
 
 DB_PATH = "discussion.db"
 
-# 배포 시 환경변수/Secrets로 변경 권장
-CLASS_PASSWORD = os.getenv("CLASS_PASSWORD", "finance2026")
-ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD", "prof1234")
-DEFAULT_CLASS_CODE = os.getenv("CLASS_CODE", "FINANCE101")
+# 비밀번호는 GitHub 코드에 저장하지 않고 Streamlit Secrets에서 불러옵니다.
+# Streamlit Community Cloud > App settings > Secrets 에서 설정하세요.
+try:
+    CLASS_PASSWORD = st.secrets["CLASS_PASSWORD"]
+    ADMIN_PASSWORD = st.secrets["ADMIN_PASSWORD"]
+    DEFAULT_CLASS_CODE = st.secrets.get("CLASS_CODE", "FINANCE101")
+except KeyError:
+    st.error("앱 비밀번호 설정이 필요합니다. Streamlit App settings > Secrets에서 CLASS_PASSWORD와 ADMIN_PASSWORD를 설정해주세요.")
+    st.stop()
 
 st.set_page_config(
     page_title="우리 수업 토론방",
